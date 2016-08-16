@@ -1,0 +1,11 @@
+{
+  "name": "fetching-javascript-demo",
+  "main": "server.js",
+  "dependencies": {
+    "consolidate": "^0.14.1",
+    "express": "^4.14.0",
+    "nunjucks": "^2.4.2"
+  },
+  "author": "Christopher Pitt <cgpitt@gmail.com>",
+  "license": "MIT"
+}
