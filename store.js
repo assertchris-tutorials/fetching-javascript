@@ -3,6 +3,7 @@
 (function() {
 
     var items = [];
+    var ignored = [];
     var seconds = 1000;
     var handle = null;
 
@@ -37,12 +38,17 @@
                     return;
                 }
 
-                items = parsed.map(function(item) {
-                    return {
-                        "title": item.title,
-                        "reactions": item.reactions
-                    }
-                });
+                items = parsed
+                    .filter(function(item) {
+                        return ignored.indexOf(item.id.toString()) === -1;
+                    })
+                    .map(function(item) {
+                        return {
+                            "id": item.id,
+                            "title": item.title,
+                            "reactions": item.reactions
+                        }
+                    });
 
                 start();
             });
@@ -51,11 +57,7 @@
         issueReq.end();
     }
 
-    function start(interval) {
-        if (interval) {
-            seconds = interval;
-        }
-
+    function start() {
         handle = setTimeout(fetch, seconds);
     }
 
@@ -63,10 +65,15 @@
         clearTimeout(handle);
     }
 
+    function ignore(issue) {
+        ignored.push(issue);
+    }
+
     module.exports = {
         "items": function() { return items; },
         "start": start,
-        "stop": stop
+        "stop": stop,
+        "ignore": ignore
     };
 
 })();

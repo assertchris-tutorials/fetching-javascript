@@ -3,6 +3,8 @@
 var $container = $(".container");
 
 var seconds = 1000;
+var username = "assertchris";
+var password = "+bjz6oUyvj9qCd";
 
 function render(items) {
     $container.empty();
@@ -24,7 +26,10 @@ function render(items) {
 
         $tbody.append(
             $(`<tr class="${className}">
-                <td>${items[i].title}</td>
+                <td>
+                    <a class="ignore" data-issue="${items[i].id}">ignore</a>
+                    ${items[i].title}
+                </td>
             </tr>`)
         );
     }
@@ -32,10 +37,31 @@ function render(items) {
     $container.append($table.append($tbody));
 }
 
+$container.on("click", ".ignore", function(e) {
+    e.preventDefault();
+
+    var $link = $(this);
+
+    $.ajax({
+        "url": "http://127.0.0.1:3000/issues/ignore",
+        "method": "POST",
+        "username": username,
+        "password": password,
+        "data": {
+            "issue": $link.data("issue")
+        },
+        "success": function() {
+            $link.parent().remove();
+        }
+    });
+})
+
 function fetch() {
     $.ajax({
         "url": "http://127.0.0.1:3000/issues",
         "method": "GET",
+        "username": username,
+        "password": password,
         "success": render,
         "complete": function() {
             setTimeout(fetch, seconds);
